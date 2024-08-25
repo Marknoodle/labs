@@ -13,7 +13,7 @@ RUN . /opt/venv/bin/activate && pip install jupyterlab
 
 # Install .NET Interactive, which enables .NET support in Jupyter
 RUN . /opt/venv/bin/activate && \
-    dotnet tool install -g Microsoft.dotnet-interactive --version 8.0.0 && \
+    dotnet tool install -g Microsoft.dotnet-interactive --version 1.0.522904 && \
     dotnet interactive jupyter install
 
 # Expose the Jupyter Notebook port
