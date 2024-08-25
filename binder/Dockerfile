@@ -11,10 +11,14 @@ RUN python3 -m venv /opt/venv
 # Activate the virtual environment and install Jupyter
 RUN . /opt/venv/bin/activate && pip install jupyterlab
 
-# Install .NET Interactive, which enables .NET support in Jupyter
-RUN . /opt/venv/bin/activate && \
-    dotnet tool install -g Microsoft.dotnet-interactive --version 1.0.522904 && \
-    dotnet interactive jupyter install
+# Install .NET Interactive
+RUN dotnet tool install -g Microsoft.dotnet-interactive --version 1.0.522904
+
+# Ensure the .NET tools are in the PATH
+ENV PATH="$PATH:/root/.dotnet/tools"
+
+# Install .NET Interactive for Jupyter
+RUN . /opt/venv/bin/activate && dotnet interactive jupyter install
 
 # Expose the Jupyter Notebook port
 EXPOSE 8888
