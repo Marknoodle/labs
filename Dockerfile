@@ -1,20 +1,20 @@
-# Use .NET SDK base image
-FROM mcr.microsoft.com/dotnet/sdk:8.0
+# Use .NET 8 SDK base image
+FROM mcr.microsoft.com/dotnet/sdk:8.0-jammy
 
-# Install Python and venv
-RUN apt-get update && apt-get install -y python3-pip python3-venv
+# Install Python, venv, and Jupyter
+RUN apt-get update && \
+    apt-get install -y python3-pip python3-venv && \
+    python3 -m venv /opt/venv && \
+    . /opt/venv/bin/activate && \
+    pip3 install jupyter && \
+    rm -rf /var/lib/apt/lists/*
 
-# Create and activate a virtual environment
-RUN python3 -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-
-# Install Jupyter in the virtual environment
-RUN pip3 install jupyter
+# Set environment variables
+ENV PATH="/opt/venv/bin:/root/.dotnet/tools:${PATH}"
 
 # Install .NET Interactive
-RUN dotnet tool install -g Microsoft.dotnet-interactive
-ENV PATH="/root/.dotnet/tools:${PATH}"
-RUN dotnet interactive jupyter install
+RUN dotnet tool install -g Microsoft.dotnet-interactive && \
+    dotnet interactive jupyter install
 
 # Set up work directory
 WORKDIR /app
